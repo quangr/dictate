@@ -1,5 +1,2 @@
 <?php
-$app->get('/', function(){
-    return 'asd';
-});
-$app->get('word/{word}', 'WordController@show');
+$app->post('auth/login', ['uses' => 'AuthController@authenticate']);

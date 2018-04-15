@@ -6,7 +6,7 @@ use App\Models\Word;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-
+use Illuminate\Http\Request;
 
 class WordController extends Controller
 {
@@ -18,17 +18,32 @@ class WordController extends Controller
     
     public function __construct()
     {
-        //
     }
-        public function showadd()
+
+    public function showadd(Request $request)
     {
         $words= new Word();
-        return view('words.show',['results'=>$words->word()]);
+        return view('words.show',['results'=>$words->word($request->auth->id)]);
+    }
+
+    public function add(Request $request)
+    {
+        $words=explode(";", $request->input('data'));
+        foreach ($words as $a) {
+            $word= new Word();        
+            $word->word=$a;
+            $word->date=$request->input('date');
+            $word->userid=$request->auth->id;
+            $word->save();
+        }
+        return 'sccc';
     }
 
 
-    public function showlist()
+    public function showlist(Request $request,$date)
     {
+        $words= new Word();
+        return view('words.show',['words'=>$words->datalist($date,$request->auth->id)]);
     }
     public function show($word)
     {

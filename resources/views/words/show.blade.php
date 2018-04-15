@@ -9,7 +9,7 @@ $(document).ready(function(){
   $("button#put").click(function(){
 	var txt=$("#words").val();
 	txt=txt.replace(/\n/g,";");
-    $.post("/trans.php",
+    $.post("/user/add",
     {
       data:txt,
       date:$("#date").val(),
@@ -23,13 +23,23 @@ $(document).ready(function(){
 @endsection
 
 @section('body')
-    
+@isset($results)    
 <textarea id="words"></textarea><br />
 <input type="text" id='date' value="{{date("Ymd")}}"><br />
 <button id="put">submit</button>
 </form>
 <br>
+@endisset
+@isset($results)
 @foreach ($results as $result)
-<a href="detail.php?type=1&id={{$result->date}}">{{$result->date}}</a>:{{$result->count}}<br>
+<a href="/user/wordlist/{{$result->date}}">{{$result->date}}</a>:{{$result->count}}<br>
 @endforeach
+@endisset
+@isset($words)
+@foreach ($words as $word)
+<a href="dict.php?words={{$word->word}}">{{$word->word}}</a><br>
+@endforeach
+@endisset
+
 @endsection
+
