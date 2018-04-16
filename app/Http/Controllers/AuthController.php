@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cookie;
 use Validator;
 use App\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Firebase\JWT\ExpiredException;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Routing\Controller as BaseController;
@@ -29,25 +31,41 @@ class AuthController extends BaseController
         $this->request = $request;
     }
 
- protected function jwt(User $user) {
+    protected static function jwt(User $user) {
         $payload = [
             'iss' => "quangr.tk", // Issuer of the token
             'sub' => $user->id, // Subject of the token
             'iat' => time(), // Time when JWT was issued. 
-            'exp' => time() + 120*60 // Expiration time
+            'exp' => time() + 2*60*60 // Expiration time
         ];
         
         // As you can see we are passing `JWT_SECRET` as the second parameter that will 
         // be used to decode the token in the future.
         return JWT::encode($payload, env('JWT_SECRET'));
     } 
+    protected static function jwt_refresh(User $user) {
+        $payload = [
+            'iss' => "quangr.tk", // Issuer of the token
+            'sub' => $user->id, // Subject of the token
+            'iat' => time(), // Time when JWT was issued. 
+            'exp' => time() + 7*24*60*60 // Expiration time
+        ];
+        
+        // As you can see we are passing `JWT_SECRET` as the second parameter that will 
+        // be used to decode the token in the future.
+        return JWT::encode($payload, env('JWT_SECRET'));
+    }
 
     /**
      * Authenticate a user and return the token if the provided credentials are correct.
      * 
      * @param  \App\User   $user 
      * @return mixed
-     */
+    */
+    public static function refreshtoken($response,User $user)
+    {
+        return $response->header('Set-Cookie', 'access-token='.self::jwt($user));
+    }
     public function showlogin()
     {
         return view('login');
@@ -73,9 +91,9 @@ class AuthController extends BaseController
 
         // Verify the password and generate the token
         if (Hash::check($this->request->input('password'), $user->password)) {
-            return response()->json([         
-   'token' => $this->jwt($user),'message'=>'login successfully'
-            ], 200);
+            $response = response()->json(['message'=>'login successfully'], 200);
+            $response = $response->header('Set-Cookie', 'access-token='.$this::jwt($user))->header('Set-Cookie','refresh-token='.$this::jwt_refresh($user));
+            return $response;
         }
 
         // Bad Request response

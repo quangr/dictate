@@ -15,7 +15,6 @@ $(document).ready(function(){
       password:$("#password").val(),
     },
     success: function (data) {
-	document.cookie="token="+data['token'];
         alert(data['message']);
     },
     error: function (data) {

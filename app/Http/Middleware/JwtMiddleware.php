@@ -6,15 +6,18 @@ use Closure;
 use Exception;
 use App\User;
 use Firebase\JWT\JWT;
+use Illuminate\Http\Response;
+use App\Http\Controllers\AuthController;
 use Firebase\JWT\ExpiredException;
 use Illuminate\Support\Facades\Cookie;
 
 class JwtMiddleware
 {
+    private $response,$need_ref;
     public function handle($request, Closure $next, $guard = null)
     {
-        $token = $request->cookie('token');
-        
+        $token = $request->cookie('access-token');
+        $ref_token = $request->cookie('refresh-token');
         if(!$token) {
             // Unauthorized response if token not there
             return response()->json([
@@ -25,9 +28,14 @@ class JwtMiddleware
         try {
             $credentials = JWT::decode($token, env('JWT_SECRET'), ['HS256']);
         } catch(ExpiredException $e) {
-            return response()->json([
-                'error' => 'Provided token is expired.'
-            ], 400);
+            try {
+            $credentials_r = JWT::decode($ref_token, env('JWT_SECRET'), ['HS256']);
+        }   catch(ExpiredException $e){return redirect('/login');}
+        $need_ref=true;
+        $user = User::find($credentials_r->sub);
+        $request->auth = $user;
+        $response=$next($request);
+        return AuthController::refreshtoken($response,$user);
         } catch(Exception $e) {
             return response()->json([
                 'error' => 'An error while decoding token.'
@@ -35,10 +43,9 @@ class JwtMiddleware
         }
 
         $user = User::find($credentials->sub);
-
         // Now let's put the user in the request class so that you can grab it from there
         $request->auth = $user;
-
-        return $next($request);
+        $response=$next($request);
+        return $response;
     }
 }
