@@ -22,7 +22,7 @@ class WordController extends Controller
     public function generate(Request $request)
     {
         $exe=base64_encode($_POST['data']);
-        exec('python /var/www/html/2.py '.$exe.' 2>&1', $result);
+        exec('python /home/ftp/www/storage/scripts/audio.py '.$exe.' '.$request->auth->id.' 2>&1', $result);
         return json_encode($result);
     }
     public function dictate(Request $request)
@@ -67,7 +67,7 @@ class WordController extends Controller
     }
     public function show($word)
     {
-        exec('python /home/ftp/www/storage/lyrics.py '.$word.' 2>&1', $result);
+        exec('python /home/ftp/www/storage/scripts/lyrics.py '.$word.' 2>&1', $result);
         foreach ($result as $a) {
             print_r($a);
     print_r('<br>');
