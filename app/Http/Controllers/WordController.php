@@ -23,7 +23,7 @@ class WordController extends Controller
     {
         $exe=base64_encode($_POST['data']);
         exec('python /home/ftp/www/storage/scripts/audio.py '.$exe.' '.$request->auth->id.' 2>&1', $result);
-        return json_encode($result);
+        return response()->file($result[0]);
     }
     public function dictate(Request $request)
     {
