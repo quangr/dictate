@@ -19,11 +19,31 @@ class WordController extends Controller
     public function __construct()
     {
     }
-
+    public function generate(Request $request)
+    {
+        $exe=base64_encode($_POST['data']);
+        exec('python /var/www/html/2.py '.$exe.' 2>&1', $result);
+        return json_encode($result);
+    }
+    public function dictate(Request $request)
+    {
+        $words= new Word();
+        return view('words.dictate',['results'=>$words->word($request->auth->id)]);
+    }
     public function showadd(Request $request)
     {
         $words= new Word();
         return view('words.show',['results'=>$words->word($request->auth->id)]);
+    }
+
+    public function delete(Request $request)
+    {
+        $word= new Word();
+        if ($word->checkdelete($request->auth->id,$request->input('id'))) 
+        {
+            $word->deleteword($request->input('id'));
+        }
+        return response()->json(['message'=>'delete successfully'], 200);
     }
 
     public function add(Request $request)

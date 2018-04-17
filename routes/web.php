@@ -20,7 +20,9 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->get('/user/add', 'WordController@showadd');
     $router->post('/user/add', 'WordController@add');
     $router->get('/user/wordlist/{date}', 'WordController@showlist');
-
+    $router->post('/user/delete', 'WordController@delete');
+    $router->get('/user/dictate', 'WordController@dictate');
+    $router->post('/generate','WordController@generate');
 });
 $router->get('/', function () use ($router) {
     return $router->app->version();

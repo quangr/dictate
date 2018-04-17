@@ -13,8 +13,14 @@ public function word($userid){
 	}
 
 public function datalist($date,$userid){
-		return $this->select('word')->where('date','=',$date)->where('userid','=',$userid)->get();
+		return $this->select('id','word')->where('date','=',$date)->where('userid','=',$userid)->get();
 	}
-
-
+public function checkdelete($userid,$id)
+{
+	return $this->select('userid')->where('id','=',$id)->get()->first()->userid==$userid;
+}
+public function deleteword($id)
+{
+	return $this->where('id', '=', $id)->delete();
+}
 }

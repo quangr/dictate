@@ -64,7 +64,7 @@ class AuthController extends BaseController
     */
     public static function refreshtoken($response,User $user)
     {
-        return $response->header('Set-Cookie', 'access-token='.self::jwt($user));
+        return $response->header('Set-Cookie', 'refresh-token='.self::jwt($user));
     }
     public function showlogin()
     {
@@ -92,7 +92,7 @@ class AuthController extends BaseController
         // Verify the password and generate the token
         if (Hash::check($this->request->input('password'), $user->password)) {
             $response = response()->json(['message'=>'login successfully'], 200);
-            $response = $response->header('Set-Cookie', 'access-token='.$this::jwt($user))->header('Set-Cookie','refresh-token='.$this::jwt_refresh($user));
+            $response = $response->header('Set-Cookie', 'access-token=' .$this::jwt($user));
             return $response;
         }
 

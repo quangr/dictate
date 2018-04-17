@@ -18,7 +18,17 @@ $(document).ready(function(){
       alert("数据：" + data + "\n状态：" + status);
     });
   });
-});
+  $(".delete").click(function(){
+  $.post("/user/delete",
+    {
+      id:this.id,
+    },
+    function(data,status){
+      alert("ok");
+      location.reload();
+    });
+  });
+  });
 
 @endsection
 
@@ -37,7 +47,7 @@ $(document).ready(function(){
 @endisset
 @isset($words)
 @foreach ($words as $word)
-<a href="dict.php?words={{$word->word}}">{{$word->word}}</a><br>
+<a href="/word/{{$word->word}}">{{$word->word}}</a><button class="delete" id="{{$word->id}}">delete</button><br>
 @endforeach
 @endisset
 
