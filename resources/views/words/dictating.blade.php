@@ -12,7 +12,7 @@
 @section('body')
 @isset($audios)
 @foreach ($audios as $audio)
-<audio controls src="data:audio/mp3;base64,{{$audio}}"/>
+<audio controls src="data:audio/mp3;base64,{{$audio}}"></audio><br>
 @endforeach
 @endisset
 @endsection
