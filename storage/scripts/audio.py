@@ -18,7 +18,9 @@ def consist(wordlist,name):
 		word += AudioSegment.from_mp3('/home/ftp/www/storage/audio/'+a.encode('utf-8')+".mp3")
 		word +=silence
 	word.export("/home/ftp/www/storage/audio/"+name+".mp3", format="mp3")
-	return "/home/ftp/www/storage/audio/"+name+".mp3"
+	with open("/home/ftp/www/storage/audio/"+name+".mp3", "rb") as audio_file:
+		encoded_string = base64.b64encode(audio_file.read())
+	return encoded_string
 #print(len(sys.argv))
 if len(sys.argv) > 1:
 	data = base64.b64decode(sys.argv[1])
@@ -39,6 +41,6 @@ if len(sys.argv) > 1:
 				once.append(word[0])
 	conn.close()
 	if twice!=[]:
-		print consist(twice,"twice")
+		print consist(twice,sys.argv[2])
 	if once!=[]:
-		print consist(once,"once")
+		print consist(once,sys.argv[2])

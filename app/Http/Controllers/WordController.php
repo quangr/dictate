@@ -19,11 +19,11 @@ class WordController extends Controller
     public function __construct()
     {
     }
-    public function generate(Request $request)
+    public function generate(Request $request,$word)
     {
-        $exe=base64_encode($_POST['data']);
+        $exe=$word;
         exec('python /home/ftp/www/storage/scripts/audio.py '.$exe.' '.$request->auth->id.' 2>&1', $result);
-        return response()->file($result[0]);
+        return view('words.dictating',['audios'=>$result]);
     }
     public function dictate(Request $request)
     {

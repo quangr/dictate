@@ -12,21 +12,8 @@ $(document).ready(function(){
     $("input:checked").each(function() {
     list.push($(this).attr("id"));
   });
-    wordjson=JSON.stringify(list)
-    $.post("/generate",
-    {
-      data:wordjson,
-    },
-    function(data,status){
-      var a=JSON.parse(data);
-      for (key in a){          
-          var $audio=$("<audio ></audio>");
-          $audio.attr("src",a[key]);
-          $audio.attr("controls","controls");
-          $("body").append($audio);
-}
-      alert("成功了,你们看左下角权威认证!");
-    });
+    wordjson=window.btoa(JSON.stringify(list));
+    window.location.replace("/generate/"+wordjson);
   });
 });
 
