@@ -44,6 +44,12 @@ $(document).ready(function(){
 @foreach ($results as $result)
 <a href="/user/wordlist/{{$result->date}}">{{$result->date}}</a>:{{$result->count}}<br>
 @endforeach
+<br>
+<br>
+<br>
+<br>
+<br>
+<a href="/user/dictate">go to dicatate</a><br>
 @endisset
 @isset($words)
 @foreach ($words as $word)

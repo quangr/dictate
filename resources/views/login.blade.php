@@ -16,6 +16,7 @@ $(document).ready(function(){
     },
     success: function (data) {
         alert(data['message']);
+        window.location.replace("/user/add");
     },
     error: function (data) {
         var errors = $.parseJSON(data.responseText);
