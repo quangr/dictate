@@ -21,6 +21,7 @@ $(document).ready(function(){
 
 @section('body')
 @isset($results)
+<a href="/user/wordlist/0">review</a><input id="0" type="checkbox"><br>
 @foreach ($results as $result)
 <a href="/user/wordlist/{{$result->date}}">{{$result->date}}</a><input id="{{$result->date}}" type="checkbox"><br>
 @endforeach

@@ -22,6 +22,9 @@ $router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->get('/user/wordlist/{date}', 'WordController@showlist');
     $router->post('/user/delete', 'WordController@delete');
     $router->get('/user/dictate', 'WordController@dictate');
+    $router->post('/user/recordd', 'WordController@record_d');
+    $router->post('/user/record', 'WordController@recordfault');
+    $router->get('/user/dictated/{word}', 'WordController@dictated');
     $router->get('/generate/{word}','WordController@generate');
 });
 #$router->get('/', function () use ($router) {

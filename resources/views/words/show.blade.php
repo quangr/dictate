@@ -41,6 +41,7 @@ $(document).ready(function(){
 <br>
 @endisset
 @isset($results)
+<a href="/user/wordlist/0">review</a><br>
 @foreach ($results as $result)
 <a href="/user/wordlist/{{$result->date}}">{{$result->date}}</a>:{{$result->count}}<br>
 @endforeach
@@ -53,7 +54,12 @@ $(document).ready(function(){
 @endisset
 @isset($words)
 @foreach ($words as $word)
+@isset($word->id)
 <a href="/word/{{$word->word}}">{{$word->word}}</a><button class="delete" id="{{$word->id}}">delete</button><br>
+@endisset
+@empty($word->id)
+<a href="/word/{{$word->word}}">{{$word->word}}</a><br>
+@endempty
 @endforeach
 @endisset
 

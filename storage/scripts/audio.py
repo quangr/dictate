@@ -30,6 +30,10 @@ if len(sys.argv) > 1:
 	twice=[]
 	dates=json.loads(data)
 	for date in dates:
+		if date=='0':
+			words = c.execute("SELECT word from dictates where userid=? order by score+?-last_dictate_date DESC ",(sys.argv[2],datetime.date.today().strftime('%Y%m%d'),))
+			for word in words:
+				twice.append(word[0])
 		if date==datetime.date.today().strftime('%Y%m%d'):
 			words = c.execute("SELECT word  from words where date=? and userid=?",(date,sys.argv[2],))
 			for word in words:
